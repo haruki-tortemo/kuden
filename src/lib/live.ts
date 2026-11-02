@@ -43,11 +43,12 @@ export function startLiveServer(opts: { epDir: string; craft: string; minutes: n
   function transcribeNew(): void {
     const wav = path.join(live, "tail.wav");
     try {
-      execFileSync("ffmpeg", ["-y", "-loglevel", "error", "-ss", String(state.settledUntil), "-i", recording, "-ac", "1", "-ar", "16000", "-c:a", "pcm_s16le", wav]);
+      // fatal: the file is still being written, so ffmpeg always reports that it ended early.
+      execFileSync("ffmpeg", ["-y", "-loglevel", "fatal", "-ss", String(state.settledUntil), "-i", recording, "-ac", "1", "-ar", "16000", "-c:a", "pcm_s16le", wav]);
     } catch {
       return; // the first bytes may not be decodable yet
     }
-    const t = transcribe(wav, live);
+    const t = transcribe(wav, live, true);
     const lines = t.segments.map((s) => ({ ...s, start: s.start + state.settledUntil, end: s.end + state.settledUntil, tokens: [] }));
     if (!lines.length) return;
     // Every line but the last is settled; the last is shown but transcribed again next time.

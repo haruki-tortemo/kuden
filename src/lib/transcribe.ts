@@ -26,14 +26,16 @@ export function probeDuration(file: string): number {
   return Number(out.toString().trim());
 }
 
-export function transcribe(wav: string, workDir: string): Transcript {
+export function transcribe(wav: string, workDir: string, quiet = false): Transcript {
   if (!fs.existsSync(MODEL)) throw new Error(`Whisper model not found: ${MODEL} (set WHISPER_MODEL)`);
   const base = path.join(workDir, "whisper");
   const args = ["-m", MODEL, "-l", "ja", "-f", wav, "-ojf", "-of", base, "-np", "-ml", "60", "-sow"];
   // VAD is off by default: with it on, whisper.cpp reports token times on a speech-only clock,
   // and the voice clips need the recording's own clock.
   if (process.env.WHISPER_VAD === "1" && fs.existsSync(VAD_MODEL)) args.push("--vad", "-vm", VAD_MODEL);
-  execFileSync("whisper-cli", args, { stdio: ["ignore", "ignore", "inherit"] });
+  // quiet: the live interview transcribes every few seconds, so its progress lines are kept off the terminal
+  // (they still come back in the error if whisper fails).
+  execFileSync("whisper-cli", args, { stdio: ["ignore", "ignore", quiet ? "pipe" : "inherit"] });
   const raw = JSON.parse(fs.readFileSync(`${base}.json`, "utf8")) as WhisperJson;
 
   const segments: Segment[] = [];

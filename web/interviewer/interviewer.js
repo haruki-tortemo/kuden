@@ -109,8 +109,9 @@
     next.classList.toggle("listening", Boolean(move?.listen_only));
     next.classList.remove("waiting");
     if (!move) return;
-    $("next-label").textContent = move.listen_only ? "いまは聞くだけ（促すなら）" : move.phase === "done" ? "聞き取りは終わりです" : "次に聞くこと";
-    $("question").textContent = move.next_question_ja;
+    const waitOnly = move.listen_only && !move.next_question_ja;
+    $("next-label").textContent = move.listen_only ? (waitOnly ? "いまは聞くだけ" : "いまは聞くだけ（促すなら）") : move.phase === "done" ? "聞き取りは終わりです" : "次に聞くこと";
+    $("question").textContent = waitOnly ? "返事を待ちましょう。" : move.next_question_ja;
     $("why").textContent = move.why_ja;
     $("backup").textContent = move.backup_question_ja ? `控え：${move.backup_question_ja}` : "";
     $("asked").disabled = !recorder || !move.next_question_ja;
