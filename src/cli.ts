@@ -78,7 +78,7 @@ async function draw(): Promise<void> {
     }
   } else {
     requireKey("OPENAI_API_KEY");
-    const { drawCharacter, drawPanel } = await import("./lib/draw.ts");
+    const { drawCharacter, drawMaterial, drawPanel } = await import("./lib/draw.ts");
     const log = file("draw-log.jsonl");
     const refs: Record<string, string> = {};
     for (const id of ["master", "apprentice"] as const) {
@@ -86,6 +86,13 @@ async function draw(): Promise<void> {
       if (!fs.existsSync(refs[id])) {
         console.log(`drawing the ${id}'s reference sheet…`);
         await drawCharacter(board, id, refs[id], log);
+      }
+    }
+    if (board.material) {
+      refs.material = file("characters/material.png");
+      if (!fs.existsSync(refs.material)) {
+        console.log(`drawing the material sheet (${board.material.name_ja})…`);
+        await drawMaterial(board, refs.material, log);
       }
     }
     // Drawn panels are kept: a panel is drawn again only when named with --only (the old one goes to _old/).
@@ -115,7 +122,7 @@ async function review(): Promise<void> {
   writeJson(file("review.json"), reviews);
   for (const r of reviews) {
     console.log(`${r.panel_id}: ${r.verdict === "ok" ? "ok" : "check"}`);
-    for (const p of r.problems) console.log(`  [${p.pass}] ${p.what} (${p.where})`);
+    for (const p of r.problems) console.log(`  [${p.pass}/${p.severity}] ${p.what} (${p.where})`);
   }
   const redo = reviews.filter((r) => r.verdict !== "ok").map((r) => r.panel_id);
   if (redo.length) console.log(`to draw again: node src/cli.ts draw --ep ${ep} --only ${redo.join(",")}`);

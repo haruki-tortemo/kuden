@@ -13,7 +13,9 @@ const SHEET_QUALITY = (process.env.OPENAI_IMAGE_QUALITY_SHEET ?? "max") as Quali
 export const STYLE = `Full-colour vertical webtoon panel in a clean modern Japanese manga style: confident ink line art, flat cel shading with soft gradients, warm natural light, calm and respectful mood. Same art style in every panel.`;
 const NO_TEXT = `Absolutely no text, letters, numbers, signs with writing, speech bubbles, captions or sound effects anywhere in the image.`;
 const AVOID = `Avoid: malformed or extra hands, extra, missing or fused fingers, twisted wrists, glossy plastic-looking skin, logos and watermarks.`;
-const STAGING = `When both people are in the frame, the apprentice is on the left and the veteran on the right. Do not line them up facing the camera; show them at an angle, in profile or over a shoulder.`;
+// The material is what the reader is learning to judge, so it must not turn decorative (rice drawn as beads or stars).
+const MATERIAL = `Draw food and craft materials true to life at their real size and shape, the way they look in a photo of a real workplace: separate grains, fibres or flakes, never beads, stars, flowers or other decorative shapes.`;
+const STAGING =`When both people are in the frame, the apprentice is on the left and the veteran on the right. Do not line them up facing the camera; show them at an angle, in profile or over a shoulder.`;
 
 let client: OpenAI | undefined;
 function getClient(): OpenAI {
@@ -53,12 +55,30 @@ export async function drawCharacter(board: Storyboard, id: "master" | "apprentic
   logUsage(logFile, `character:${id}`, SHEET_QUALITY, res.usage);
 }
 
-// Reference images are passed in the order of panel.characters, and the prompt numbers them the same way.
-export function panelPrompt(board: Storyboard, panel: Panel): string {
+export async function drawMaterial(board: Storyboard, file: string, logFile: string): Promise<void> {
+  if (!board.material) throw new Error("Storyboard has no material");
+  const prompt = [
+    STYLE,
+    `Reference sheet for the material of a manga: a close-up study filling the frame, lit by soft daylight, on a plain light background. Draw it true to life, as in a close-up photo of a real workplace, with the same line art and shading as the panels.`,
+    board.material.look,
+    MATERIAL,
+    NO_TEXT,
+  ].join("\n");
+  const res = await getClient().images.generate({ model: MODEL, prompt, size: "1024x1024", quality: SHEET_QUALITY, n: 1 });
+  save(res.data?.[0]?.b64_json, file);
+  logUsage(logFile, "material", SHEET_QUALITY, res.usage);
+}
+
+// Reference images are passed in the order of panel.characters, then the material sheet,
+// and the prompt numbers them the same way.
+export function panelPrompt(board: Storyboard, panel: Panel, withMaterial = false): string {
   const cast = panel.characters.map((id, i) => {
     const c = board.characters.find((x) => x.id === id);
     return `${id === "master" ? "The veteran" : "The apprentice"} is reference image ${i + 1}: ${c?.look ?? ""}`;
   });
+  const material = withMaterial && board.material
+    ? `Reference image ${cast.length + 1} is the material of this episode (${board.material.name_ja}): ${board.material.look} Wherever it appears, draw it with the same shape, size and texture as on that sheet. Do not copy the sheet's framing or background.`
+    : "";
   return [
     STYLE,
     `Setting, the same in every panel: ${board.setting}`,
@@ -66,8 +86,10 @@ export function panelPrompt(board: Storyboard, panel: Panel): string {
     cast.length
       ? `From each reference sheet take only that person's face, hair, build and clothes, exactly as drawn. Do not copy the sheet's side-by-side layout, its poses, its empty space or its plain background.`
       : "",
+    material,
     panel.characters.length === 2 ? STAGING : "",
     `This panel: ${panel.image_prompt}`,
+    MATERIAL,
     AVOID,
     NO_TEXT,
   ]
@@ -82,7 +104,6 @@ export async function drawPanel(
   file: string,
   logFile: string,
 ): Promise<void> {
-  const prompt = panelPrompt(board, panel);
   const size = PANEL_SIZE[panel.height];
   // A missing reference would silently give a stranger's face, so stop instead of drawing without it.
   const refFiles = panel.characters.map((id) => {
@@ -90,6 +111,9 @@ export async function drawPanel(
     if (!f || !fs.existsSync(f)) throw new Error(`Reference sheet for ${id} is missing (${f ?? "none"}); draw it before ${panel.id}`);
     return f;
   });
+  const withMaterial = Boolean(board.material && refs.material && fs.existsSync(refs.material));
+  if (withMaterial) refFiles.push(refs.material);
+  const prompt = panelPrompt(board, panel, withMaterial);
   const res = refFiles.length
     ? await getClient().images.edit({
         model: MODEL,

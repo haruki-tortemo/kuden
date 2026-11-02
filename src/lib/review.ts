@@ -6,10 +6,11 @@ import type { Panel, Storyboard } from "./episode.ts";
 
 // Claude looks at every drawn panel three times, each pass with one question, the way an editor checks
 // pages: the story first, then the people, then the small things. Problems come back per panel.
+// Only "redraw" problems mark a panel; everything else is a note, or every panel would be marked every time.
+const Severity = z.enum(["redraw", "note"]);
 const Finding = z.object({
   panel_id: z.string(),
-  ok: z.boolean(),
-  problems: z.array(z.object({ what: z.string(), where: z.string() })),
+  problems: z.array(z.object({ what: z.string(), where: z.string(), severity: Severity })),
 });
 const Pass = z.object({ panels: z.array(Finding) });
 type Finding = z.infer<typeof Finding>;
@@ -17,8 +18,12 @@ type Finding = z.infer<typeof Finding>;
 export interface PanelReview {
   panel_id: string;
   verdict: "ok" | "check";
-  problems: { pass: "story" | "people" | "detail"; what: string; where: string }[];
+  problems: { pass: "story" | "people" | "detail"; what: string; where: string; severity: z.infer<typeof Severity> }[];
 }
+
+const SEVERITY = `Give every problem a severity.
+"redraw" only when a reader would be misled or put off: a person who does not look like their reference sheet (face, hair, build, clothes), malformed or extra hands or fingers, letters or writing in the picture, the apprentice and the veteran on the wrong sides, the action of the panel not shown, or the key food, tool or material drawn so that it reads as something else.
+"note" for everything else, including a different angle, pose, expression or framing than planned, or a busy area where a balloon was meant to go (balloons can sit at the panel edge).`;
 
 type Block = Anthropic.Beta.BetaContentBlockParam;
 
@@ -56,13 +61,13 @@ export async function reviewEpisode(
     const r = result.get(f.panel_id);
     if (!r) return;
     for (const p of f.problems) r.problems.push({ pass, ...p });
-    if (!f.ok || f.problems.length) r.verdict = "check";
+    if (f.problems.some((p) => p.severity === "redraw")) r.verdict = "check";
   };
 
   log("review 1/3: reading the episode as a whole…");
   const story = await askStructured({
     schema: Pass,
-    system: STORY,
+    system: `${STORY}\n${SEVERITY}`,
     user: panels.flatMap((p): Block[] => [{ type: "text", text: plan(p) }, image(images[p.id])]),
     effort: "high",
   });
@@ -75,7 +80,7 @@ export async function reviewEpisode(
     );
     const people = await askStructured({
       schema: Pass,
-      system: PEOPLE,
+      system: `${PEOPLE}\n${SEVERITY}`,
       user: [...refs, { type: "text", text: `Panel to check:\n${plan(p)}` }, image(images[p.id])],
       effort: "high",
     });
@@ -86,7 +91,7 @@ export async function reviewEpisode(
   for (const p of panels) {
     const detail = await askStructured({
       schema: Pass,
-      system: DETAIL,
+      system: `${DETAIL}\n${SEVERITY}`,
       user: [{ type: "text", text: plan(p) }, image(images[p.id])],
       effort: "high",
     });

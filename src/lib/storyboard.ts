@@ -40,6 +40,7 @@ Title and lesson (written by you):
 
 Pictures:
 - Characters: exactly two, ids "master" and "apprentice". In "look", describe in English how each must be drawn every time: age, face, build, and make their hair colour, hairstyle and main clothing colour all different from each other.
+- material: the one food or material the judgment is about (name_ja, in Japanese). In "look", describe in English how it really looks up close in a real workplace, so an illustrator can draw it from your words alone: the shape and size of each piece, grain or fibre, colour, surface, and how the pieces sit together.
 - shot: wide, medium, close or hands. Neighbouring panels must not have the same shot. Include at least one "hands" panel (hands, tools or material, no faces).
 - image_prompt, in English for an image model: the shot, who is in it and what they do, which hand they use (right or left), where they look or point, their expression, the objects, where the light comes from, and which corner stays empty for the balloon (match the balloon anchor). Describe things, not moods. No text, letters, speech bubbles or sound effects in the image.
 - When both people are in a panel, keep the apprentice on the left of the frame and the veteran on the right in every panel (balloons read left to right, and the apprentice usually speaks first), and do not line them up facing the camera; show them at an angle, in profile or over a shoulder.
@@ -64,7 +65,7 @@ export async function proofread(t: Transcript, craft: string): Promise<Transcrip
     schema: Proofread,
     system: PROOFREAD_SYSTEM,
     user: `Craft: ${craft}\n\nTranscript:\n${transcriptText(t)}`,
-    effort: "medium",
+    effort: "high",
   });
   const byId = new Map(corrections.map((c) => [c.segment_id, c]));
   return {

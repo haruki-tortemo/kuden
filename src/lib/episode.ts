@@ -68,11 +68,19 @@ export const Character = z.object({
   look: z.string(),
 });
 
+// The food or material the judgment is about. It gets its own reference sheet like the two people,
+// because a written description alone did not stop the image model from drawing rice as beads.
+export const Material = z.object({
+  name_ja: z.string(),
+  look: z.string(),
+});
+
 export const Storyboard = z.object({
   title_ja: z.string(),
   lesson_ja: z.string(),
   setting: z.string(),
   characters: z.array(Character),
+  material: Material.optional(),
   panels: z.array(Panel),
 });
 export type Storyboard = z.infer<typeof Storyboard>;
