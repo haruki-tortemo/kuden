@@ -24,7 +24,7 @@ recording ─▶ transcript ─▶ storyboard ─▶ panels ─▶ review ─▶
 
 | | Job | What Claude does | Status |
 |---|---|---|---|
-| 1 | **Interviewer** | Sits beside the person interviewing the veteran and suggests the one next question from what has been said so far. It follows the Critical Decision Method (Klein, Calderwood & MacGregor, 1989): one hard incident told without interruption, then the decision points and what the veteran noticed, weighed and chose, then what a newcomer would miss. The veteran never talks to the tool. | working, screen in testing |
+| 1 | **Interviewer** | Sits beside the person interviewing the veteran and suggests the one next question from what has been said so far. It follows the Critical Decision Method (Klein, Calderwood & MacGregor, 1989): one hard incident told without interruption, then the decision points and what the veteran noticed, weighed and chose, then what a newcomer would miss. The veteran never talks to the tool. | working, tried with a real microphone |
 | 2 | **Storyboard** | Turns the recording into one episode: the apprentice stuck, the cue only the veteran notices, the judgment and the reason. The veteran's balloons use only their recorded words, checked word by word in code. | working |
 | 3 | **Three-pass review** | Looks at every drawn panel three times: the story, the people against their sheets, then hands, gaze, objects and stray writing. Only real problems mark a panel for redrawing. | working |
 

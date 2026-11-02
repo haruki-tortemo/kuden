@@ -87,3 +87,16 @@ Code so far: `src/lib/storyboard.ts` (`PROOFREAD_SYSTEM`, effort `high`), `src/l
 **Decision.** Both steps stay on Opus 5.5. Sonnet was twice as fast, but it broke the length rule and made one translation error the reader would see. Its critic false alarm would send a correct storyboard back for another (Opus) try. The model for these steps stays switchable (`CLAUDE_MODEL_LIGHT`), so the comparison can be run again when models change.
 
 Raw results stay local (`episodes/<id>/compare/`); the script is in the repository.
+
+## 5. The interviewer read the question out loud → the AI asked it again
+
+**What broke.** In the first test with a real microphone, the person interviewing read the suggested opening out loud but did not press 聞いた. The next suggestion was the same opening again. It even started with "はい、よく聞こえています", an answer to the interviewer's own mic check.
+
+**Why.** One microphone hears both people, and the transcript does not say who is speaking. The prompt only counted the questions the interviewer had marked as asked.
+
+**Fix.** The prompt now says that the transcript mixes both voices and that talk about the equipment is setup. A question that can be heard in the transcript counts as asked, marked or not. When the veteran has not answered yet, the screen shows 返事を待ちましょう instead of a new question.
+
+| | Before | After (same recording, replayed) |
+|---|---|---|
+| After the mic check only | "はい、よく聞こえています。今日は…" | the opening, without answering the mic check |
+| After the opening was read out, not marked | the same opening again | wait: "冒頭の説明と録音使用の許可をたった今お願いしたところで、親方はまだ答えていません" |
