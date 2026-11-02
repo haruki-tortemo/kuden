@@ -1,6 +1,6 @@
 # claude-japan-2026 (working title)
 
-**A form for handing a veteran's judgment on to the next person.** The veteran talks about one call they make at work that a newcomer would miss, and it becomes a vertical manga textbook for young workers, including those who came to Japan from abroad. Tap a panel and you hear the veteran say those words in their own voice; switch the balloons between Japanese, easy Japanese, English, Vietnamese and Portuguese.
+**Turns a veteran's spoken judgment into a manga textbook the next person can learn from.** The veteran talks about one call they make at work that a newcomer would miss, and it becomes a vertical manga episode for young workers, including those who came to Japan from abroad. Tap a panel and you hear the veteran say those words in their own voice; switch the balloons between Japanese, easy Japanese, English, Vietnamese and Portuguese.
 
 Built during Built with Claude: Japan 2026, theme ①: depth only you have. A Japanese version of this README will follow.
 
