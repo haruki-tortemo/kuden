@@ -57,9 +57,25 @@ Code: `src/lib/review.ts` (`SEVERITY`, the three passes), `src/cli.ts` (`review`
 
 So the craftsman's balloon in panel 2 says "the *eyes* go hard" instead of "the *rice* goes hard". Raising the proofreading effort from medium to high is in the code now, but this kind of error cannot be fully caught by checking. Every balloon the craftsman speaks is checked word by word against the transcript, and that check passes, because the transcript itself is wrong.
 
-**What we are building.** The craftsman's words are the point of the book, so a person has to confirm them. The confirmation screen (build step 3) shows each of the craftsman's balloons next to the seconds of audio it came from, with the proofreader's corrections marked. The craftsman, or whoever interviewed them, accepts or fixes each line before the episode is drawn and published.
+**Fix: the craftsman confirms their own words.** Before an episode is published, the craftsman goes through it with the interviewer on the confirmation screen (`node src/cli.ts confirm --ep <id>`). Every line they speak has 聞く (play the seconds it came from), 直す, 録り直す and 声を外す, and the proofreader's corrections are listed for that panel with 合っている / 元に戻す. Publishing stays locked until every panel is passed.
 
-Status: open. The before and after of this screen will be added here when it is built.
+Fixing 目 to 米 changes the words but not the recording, so the screen says so instead of hiding it: the panel is marked 声とずれ until the craftsman records the line again or chooses to keep the old voice.
+
+![Panel 2 right after 目 was fixed to 米: the changed character is underlined and the panel is marked 声とずれ](devlog/3-confirm-differs.jpg)
+
+![The same panel after 「このまま使う」: every panel passed, the page written](devlog/3-confirm-kept.jpg)
+
+When any wording changed, publishing translates the episode again, so the fix reaches every language:
+
+| | Before (目) | After the craftsman's fix (米) |
+|---|---|---|
+| Japanese | 目が固くなって、口の中でほどけないんだ。 | 米が固くなって、口の中でほどけないんだ。 |
+| Easy Japanese | ごはんの 粒(つぶ)が 固(かた)く なります。… | お米(こめ)が 固(かた)く なります。… |
+| English | The grains go hard and won't fall apart in your mouth. | The rice hardens. Won't loosen in the mouth. |
+
+The translator had already guessed "grains" from the context, while the Japanese balloon still said 目. A reader of the Japanese page would have seen the wrong word. The choices are kept in `confirm.json` next to the episode; the storyboard and the cut voices stay as they were made, so every choice can be undone.
+
+Status: fixed (the confirmation screen is in `src/lib/confirm.ts` and `web/confirm/`).
 
 Code so far: `src/lib/storyboard.ts` (`PROOFREAD_SYSTEM`, effort `high`), `src/lib/words.ts` (the word-by-word check).
 

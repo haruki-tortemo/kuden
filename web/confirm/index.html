@@ -1,0 +1,42 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>公開の前の確かめ</title>
+<link rel="stylesheet" href="confirm.css">
+</head>
+<body>
+<header class="bar">
+  <p class="bar-title"><span id="kicker"></span>　<span id="title"></span><span class="bar-sub">公開の前の確かめ</span></p>
+  <div class="bar-right">
+    <span class="progress" id="progress"></span>
+    <button type="button" class="btn-fill" id="publish" disabled>公開する</button>
+  </div>
+</header>
+<p class="notice" id="notice" role="status"></p>
+
+<div class="layout">
+  <nav class="panel-list" aria-label="コマの一覧">
+    <ol id="panel-list"></ol>
+  </nav>
+
+  <main class="stage">
+    <figure class="frame"><img id="panel-image" alt=""></figure>
+
+    <section class="lines" aria-label="このコマのセリフ">
+      <div id="balloons"></div>
+      <div id="corrections"></div>
+    </section>
+
+    <div class="stage-foot">
+      <button type="button" class="btn-ink" id="pass">このコマはこれでよい</button>
+      <button type="button" class="btn-line" id="next">次のコマへ</button>
+    </div>
+  </main>
+</div>
+
+<audio id="player" preload="none"></audio>
+<script src="confirm.js"></script>
+</body>
+</html>

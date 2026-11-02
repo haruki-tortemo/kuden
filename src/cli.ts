@@ -19,7 +19,10 @@ const USAGE = `Usage:
   node src/cli.ts all <audio file> --ep <id> [--placeholder]
   node src/cli.ts interview --ep <id> [--craft 寿司職人] [--minutes 30] [--port 4180]
                                                       live interview: records, transcribes and suggests the next question
-                                                      (afterwards: ingest episodes/<id>/live/recording.webm --ep <id>)`;
+                                                      (afterwards: ingest episodes/<id>/live/recording.webm --ep <id>)
+  node src/cli.ts confirm --ep <id> [--number 1] [--port 4190]
+                                                      the veteran checks every panel before publishing: listen,
+                                                      fix a word, record a line again, take a voice out, then publish`;
 
 const { values, positionals } = parseArgs({
   allowPositionals: true,
@@ -32,7 +35,7 @@ const { values, positionals } = parseArgs({
     out: { type: "string" },
     "voice-base": { type: "string" },
     minutes: { type: "string", default: "30" },
-    port: { type: "string", default: "4180" },
+    port: { type: "string" },
   },
 });
 
@@ -169,7 +172,7 @@ try {
     case "interview": {
       requireKey("ANTHROPIC_API_KEY");
       const { startLiveServer } = await import("./lib/live.ts");
-      const port = Number(values.port);
+      const port = Number(values.port ?? 4180);
       const server = startLiveServer({ epDir: dir, craft: values.craft!, minutes: Number(values.minutes), port });
       server.on("error", (err: NodeJS.ErrnoException) => {
         console.error(err.code === "EADDRINUSE" ? `Port ${port} is already in use. Try another one: --port ${port + 1}` : err.message);
@@ -178,6 +181,17 @@ try {
       server.on("listening", () =>
         console.log(`interview: http://127.0.0.1:${port}/  (Ctrl+C to stop; the recording is kept in ${path.join(dir, "live")})`),
       );
+      break;
+    }
+    case "confirm": {
+      const { startConfirmServer } = await import("./lib/confirm.ts");
+      const port = Number(values.port ?? 4190);
+      const server = startConfirmServer({ epDir: dir, ep, number: values.number!, port });
+      server.on("error", (err: NodeJS.ErrnoException) => {
+        console.error(err.code === "EADDRINUSE" ? `Port ${port} is already in use. Try another one: --port ${port + 1}` : err.message);
+        process.exit(1);
+      });
+      server.on("listening", () => console.log(`confirm: http://127.0.0.1:${port}/  (Ctrl+C to stop; choices are kept in ${path.join(dir, "confirm.json")})`));
       break;
     }
     case "all":

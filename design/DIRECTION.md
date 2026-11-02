@@ -18,4 +18,8 @@ One planned difference from the original: balloons sit on the top or bottom edge
 
 Drawn the same way: three drafts from one written spec, in the reader's visual system. The one with the largest question was chosen (2026-11-02 22:43), because the interviewer glances at it during a call and reads it out. Original: `design/interviewer-original.png` (sha256 starts 85e2eb265f518453). The states the drawing does not show (before recording, listen only, waiting for the answer, no connection) use the same parts.
 
+## Confirmation screen
+
+Drawn the same way, three drafts from one written spec in the same visual system, using the real 目/米 panel as the example. Chosen (2026-11-03 02:47): the one where each line sits in a balloon shape like the one it becomes in the manga, and every panel in the list shows its state (確かめた / 声とずれ / まだ). Original: `design/confirm-original.png` (sha256 starts 41b498086bfcc477).
+
 Tokens used by `web/reader/reader.css`: paper `#f3efe6`, ink `#1d1b18`, accent (vermilion) `#c2412d`, soft ink `#6b655c`, rule `#d9d2c4`.

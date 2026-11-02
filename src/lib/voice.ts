@@ -12,6 +12,9 @@ export interface VoiceClip {
   end: number;
 }
 
+// Every clip, cut from the interview or recorded again on the confirmation screen, is brought to this loudness.
+export const LOUDNESS = "loudnorm=I=-16:TP=-1.5:LRA=11";
+
 const PAD_BEFORE = 0.12;
 const PAD_AFTER = 0.25;
 
@@ -90,7 +93,7 @@ export function cutVoices(board: Storyboard, t: Transcript, sourceAudio: string,
       execFileSync("ffmpeg", [
         "-y", "-loglevel", "error",
         "-ss", start.toFixed(3), "-to", end.toFixed(3), "-i", sourceAudio,
-        "-af", "loudnorm=I=-16:TP=-1.5:LRA=11,afade=t=in:d=0.04",
+        "-af", `${LOUDNESS},afade=t=in:d=0.04`,
         "-ac", "1", "-ar", "44100", "-c:a", "aac", "-b:a", "96k", out,
       ]);
       clips.push({ panel_id: panel.id, index, file: rel, start: round(start), end: round(end) });

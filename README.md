@@ -4,7 +4,7 @@
 
 Built during Built with Claude: Japan 2026, theme ①: depth only you have. A Japanese version of this README will follow.
 
-> Status: work in progress. The recording → manga → page pipeline runs end to end on a sample recording. The interviewer AI and the confirmation screen are being built.
+> Status: work in progress. The recording → manga → page pipeline runs end to end on a sample recording, with the interviewer AI before it and the craftsman's confirmation screen before publishing.
 
 ## How it works
 
@@ -18,7 +18,8 @@ recording ─▶ transcript ─▶ storyboard ─▶ panels ─▶ review ─▶
 3. **Draw** reference sheets for the two people and for the material the judgment is about, then every panel from those sheets. No text is drawn into the pictures.
 4. **Review** every drawn panel three times, one question each: story, people, details. Only problems that would mislead a reader mark a panel for redrawing.
 5. **Cut the voice** for each of the veteran's balloons from the recording, using the word times.
-6. **Export** a static page that works offline, with no server and no keys.
+6. **Confirm** with the craftsman: every line they speak can be played, fixed, recorded again or taken out, and the proofreading changes are accepted or undone. Publishing stays locked until every panel is passed.
+7. **Export** a static page that works offline, with no server and no keys.
 
 ## The core: three jobs Claude does
 
@@ -84,7 +85,7 @@ If you will commit to this repository, turn on its pre-commit check once per clo
 
 Keys for the API steps go in the environment (`ANTHROPIC_API_KEY`, `OPENAI_API_KEY`) or in `~/.secrets/anthropic.env` and `~/.secrets/openai.env`. To try the flow without image costs, add `--placeholder`: panels are drawn as labelled boxes.
 
-The finished page is in `out/<episode>/index.html` and opens in any browser.
+Before publishing, go through the episode with the craftsman: `node src/cli.ts confirm --ep my-episode`, open the address it prints, and press 公開する when every panel is passed. The finished page is in `out/<episode>/index.html` and opens in any browser.
 
 A person's voice is theirs. By default the voice clips are copied next to the page. With `export --voice-base <url>` they are not copied: the page loads them from storage the speaker agreed to, so the voice never has to be in this repository.
 
