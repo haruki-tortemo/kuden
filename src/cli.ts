@@ -12,6 +12,7 @@ const USAGE = `Usage:
   node src/cli.ts ingest <audio file> --ep <id>     recording -> transcript with times (local whisper.cpp)
   node src/cli.ts storyboard --ep <id> [--craft 寿司職人]   transcript -> panels and balloons, then translations (Claude)
   node src/cli.ts draw --ep <id> [--placeholder] [--only p3]  panels -> images (GPT-Image-2.5)
+  node src/cli.ts review --ep <id>                    Claude checks every drawn panel in three passes
   node src/cli.ts voice --ep <id>                     cut the veteran's voice for each balloon
   node src/cli.ts export --ep <id> [--out dir]        static page you can open or host
   node src/cli.ts all <audio file> --ep <id> [--placeholder]`;
@@ -21,6 +22,7 @@ const { values, positionals } = parseArgs({
   options: {
     ep: { type: "string" },
     craft: { type: "string", default: "寿司職人" },
+    number: { type: "string", default: "1" },
     placeholder: { type: "boolean", default: false },
     only: { type: "string" },
     out: { type: "string" },
@@ -62,7 +64,7 @@ async function storyboard(): Promise<void> {
   writeJson(file("storyboard.json"), board);
   console.log(`storyboard: ${board.panels.length} panels, "${board.title_ja}"`);
   console.log("Claude is translating the balloons…");
-  writeJson(file("translations.json"), await translate(board));
+  writeJson(file("translations.json"), await translate(board, `第${values.number}話　${values.craft}の判断`));
 }
 
 async function draw(): Promise<void> {
@@ -86,13 +88,37 @@ async function draw(): Promise<void> {
         await drawCharacter(board, id, refs[id], log);
       }
     }
+    // Drawn panels are kept: a panel is drawn again only when named with --only (the old one goes to _old/).
     for (const p of panels) {
-      console.log(`drawing ${p.id} (${p.beat})…`);
-      await drawPanel(board, p, refs, file(`panels/${p.id}.png`), log);
+      const out = file(`panels/${p.id}.png`);
+      if (fs.existsSync(out) && !values.only) {
+        console.log(`${p.id} already drawn, kept (use --only ${p.id} to draw it again)`);
+      } else {
+        console.log(`drawing ${p.id} (${p.beat}, ${p.shot})…`);
+        await drawPanel(board, p, refs, out, log);
+      }
       images[p.id] = `panels/${p.id}.png`;
+      writeJson(file("images.json"), images);
     }
   }
   writeJson(file("images.json"), images);
+}
+
+async function review(): Promise<void> {
+  requireKey("ANTHROPIC_API_KEY");
+  const { reviewEpisode } = await import("./lib/review.ts");
+  const board = readJson(file("storyboard.json"), Storyboard);
+  const rel: PanelImages = JSON.parse(fs.readFileSync(file("images.json"), "utf8"));
+  const images = Object.fromEntries(Object.entries(rel).map(([k, v]) => [k, file(v)]));
+  const sheets = { master: file("characters/master.png"), apprentice: file("characters/apprentice.png") };
+  const reviews = await reviewEpisode(board, images, sheets);
+  writeJson(file("review.json"), reviews);
+  for (const r of reviews) {
+    console.log(`${r.panel_id}: ${r.verdict === "ok" ? "ok" : "check"}`);
+    for (const p of r.problems) console.log(`  [${p.pass}] ${p.what} (${p.where})`);
+  }
+  const redo = reviews.filter((r) => r.verdict !== "ok").map((r) => r.panel_id);
+  if (redo.length) console.log(`to draw again: node src/cli.ts draw --ep ${ep} --only ${redo.join(",")}`);
 }
 
 function voice(): void {
@@ -122,12 +148,14 @@ try {
     case "ingest": ingest(input!); break;
     case "storyboard": await storyboard(); break;
     case "draw": await draw(); break;
+    case "review": await review(); break;
     case "voice": voice(); break;
     case "export": exportPage(); break;
     case "all":
       ingest(input!);
       await storyboard();
       await draw();
+      if (!values.placeholder) await review();
       voice();
       exportPage();
       break;

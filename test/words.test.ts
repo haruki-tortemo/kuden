@@ -22,6 +22,7 @@ function board(text: string, source_segments = [0, 1], speaker: "master" | "appr
       {
         id: "p1",
         beat: "judgment",
+        shot: "close",
         height: "normal",
         characters: [],
         image_prompt: "x",

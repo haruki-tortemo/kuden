@@ -29,7 +29,9 @@ export function exportEpisode(opts: {
 
   const data = {
     title: translations.title,
-    lesson: board.lesson_ja,
+    kicker: translations.kicker,
+    lesson: translations.lesson,
+    masterName: translations.master_name,
     langLabels: LANG_LABELS,
     panels: board.panels.map((p) => {
       const [width, height] = PANEL_SIZE[p.height].split("x").map(Number);

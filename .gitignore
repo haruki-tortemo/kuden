@@ -9,3 +9,6 @@ node_modules/
 # Only finished, consented episodes are copied into samples/.
 episodes/
 out/
+
+# Design drafts (the chosen original is design/reader-original.png)
+design/mocks/

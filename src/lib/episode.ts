@@ -47,6 +47,7 @@ export type Balloon = z.infer<typeof Balloon>;
 export const Panel = z.object({
   id: z.string(),
   beat: z.enum(["trouble", "cue", "judgment", "reason", "result", "summary"]),
+  shot: z.enum(["wide", "medium", "close", "hands"]),
   height: z.enum(["short", "normal", "tall"]),
   characters: z.array(z.enum(["master", "apprentice"])),
   image_prompt: z.string(),
@@ -81,6 +82,9 @@ const PerLang = z.object({ ja: z.string(), ja_easy: z.string(), en: z.string(), 
 
 export const Translations = z.object({
   title: PerLang,
+  kicker: PerLang, // e.g. 第1話　寿司職人の判断
+  lesson: PerLang,
+  master_name: PerLang,
   balloons: z.array(
     z.object({
       panel_id: z.string(),
