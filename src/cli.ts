@@ -16,7 +16,10 @@ const USAGE = `Usage:
   node src/cli.ts voice --ep <id>                     cut the veteran's voice for each balloon
   node src/cli.ts export --ep <id> [--out dir] [--voice-base url]   static page you can open or host
                                                       (--voice-base: load voice clips from there instead of copying them)
-  node src/cli.ts all <audio file> --ep <id> [--placeholder]`;
+  node src/cli.ts all <audio file> --ep <id> [--placeholder]
+  node src/cli.ts interview --ep <id> [--craft 寿司職人] [--minutes 30] [--port 4174]
+                                                      live interview: records, transcribes and suggests the next question
+                                                      (afterwards: ingest episodes/<id>/live/recording.webm --ep <id>)`;
 
 const { values, positionals } = parseArgs({
   allowPositionals: true,
@@ -28,6 +31,8 @@ const { values, positionals } = parseArgs({
     only: { type: "string" },
     out: { type: "string" },
     "voice-base": { type: "string" },
+    minutes: { type: "string", default: "30" },
+    port: { type: "string", default: "4174" },
   },
 });
 
@@ -161,6 +166,14 @@ try {
     case "review": await review(); break;
     case "voice": voice(); break;
     case "export": exportPage(); break;
+    case "interview": {
+      requireKey("ANTHROPIC_API_KEY");
+      const { startLiveServer } = await import("./lib/live.ts");
+      const port = Number(values.port);
+      startLiveServer({ epDir: dir, craft: values.craft!, minutes: Number(values.minutes), port });
+      console.log(`interview: http://127.0.0.1:${port}/  (Ctrl+C to stop; the recording is kept in ${path.join(dir, "live")})`);
+      break;
+    }
     case "all":
       ingest(input!);
       await storyboard();
