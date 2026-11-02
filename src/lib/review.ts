@@ -32,7 +32,7 @@ function plan(p: Panel): string {
 }
 
 const STORY = `You are the editor of a manga textbook. You see every panel of one episode in reading order, with the plan for each.
-Read it top to bottom as a reader would. For each panel, say whether the picture shows what its plan says and whether the episode can be followed from one panel to the next. Also check that when both people appear, the veteran stays on the left and the apprentice on the right.
+Read it top to bottom as a reader would. For each panel, say whether the picture shows what its plan says and whether the episode can be followed from one panel to the next. Also check that when both people appear, the apprentice stays on the left and the veteran on the right.
 Speech balloons are added later, so their absence is not a problem. Report concrete problems only, with where in the panel they are.`;
 
 const PEOPLE = `You compare a manga panel with the reference sheets of the people in it.

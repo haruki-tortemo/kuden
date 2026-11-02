@@ -13,7 +13,7 @@ const SHEET_QUALITY = (process.env.OPENAI_IMAGE_QUALITY_SHEET ?? "max") as Quali
 export const STYLE = `Full-colour vertical webtoon panel in a clean modern Japanese manga style: confident ink line art, flat cel shading with soft gradients, warm natural light, calm and respectful mood. Same art style in every panel.`;
 const NO_TEXT = `Absolutely no text, letters, numbers, signs with writing, speech bubbles, captions or sound effects anywhere in the image.`;
 const AVOID = `Avoid: malformed or extra hands, extra, missing or fused fingers, twisted wrists, glossy plastic-looking skin, logos and watermarks.`;
-const STAGING = `When both people are in the frame, the veteran is on the left and the apprentice on the right. Do not line them up facing the camera; show them at an angle, in profile or over a shoulder.`;
+const STAGING = `When both people are in the frame, the apprentice is on the left and the veteran on the right. Do not line them up facing the camera; show them at an angle, in profile or over a shoulder.`;
 
 let client: OpenAI | undefined;
 function getClient(): OpenAI {

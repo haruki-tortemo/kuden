@@ -42,7 +42,7 @@ Pictures:
 - Characters: exactly two, ids "master" and "apprentice". In "look", describe in English how each must be drawn every time: age, face, build, and make their hair colour, hairstyle and main clothing colour all different from each other.
 - shot: wide, medium, close or hands. Neighbouring panels must not have the same shot. Include at least one "hands" panel (hands, tools or material, no faces).
 - image_prompt, in English for an image model: the shot, who is in it and what they do, which hand they use (right or left), where they look or point, their expression, the objects, where the light comes from, and which corner stays empty for the balloon (match the balloon anchor). Describe things, not moods. No text, letters, speech bubbles or sound effects in the image.
-- When both people are in a panel, keep the veteran on the left of the frame and the apprentice on the right in every panel, and do not line them up facing the camera; show them at an angle, in profile or over a shoulder.
+- When both people are in a panel, keep the apprentice on the left of the frame and the veteran on the right in every panel (balloons read left to right, and the apprentice usually speaks first), and do not line them up facing the camera; show them at an angle, in profile or over a shoulder.
 - height: "tall" for the judgment or a dramatic moment, "short" for a quick beat, otherwise "normal".`;
 
 const CRITIC_SYSTEM = `You review the lines a storyboard writer wrote for a manga textbook read by young workers who are still learning Japanese. Point out problems only; do not rewrite anything.
