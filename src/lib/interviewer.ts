@@ -70,7 +70,7 @@ Rules:
 - Never add facts, numbers or reasons the veteran did not say, not even in a summary. Say "私の想像ですが" before anything that is your guess.
 - If the veteran sounds tired, suggest closing for today.
 - In notes_ja, write at most three short notes for the interviewer only (for example a cue word worth coming back to), in Japanese.
-- In covered, mark only what the veteran has actually said.`;
+- In covered, mark only what the veteran has actually said. Name each decision point in a few words (about 12 characters), using the veteran's own words where you can, for example 湯気が消えかけた所.`;
 
 function lines(segments: Segment[]): string {
   return segments.map((s) => `[${s.start.toFixed(0)}s] ${s.text}`).join("\n");

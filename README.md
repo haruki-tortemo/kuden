@@ -24,7 +24,7 @@ recording ─▶ transcript ─▶ storyboard ─▶ panels ─▶ review ─▶
 
 | | Job | What Claude does | Status |
 |---|---|---|---|
-| 1 | **Interviewer** | Asks the veteran about one judgment, without interrupting. It follows the timeline, finds the moment of decision and what they noticed, and asks what a newcomer would miss. | being built |
+| 1 | **Interviewer** | Sits beside the person interviewing the veteran and suggests the one next question from what has been said so far. It follows the Critical Decision Method (Klein, Calderwood & MacGregor, 1989): one hard incident told without interruption, then the decision points and what the veteran noticed, weighed and chose, then what a newcomer would miss. The veteran never talks to the tool. | working, screen in testing |
 | 2 | **Storyboard** | Turns the recording into one episode: the apprentice stuck, the cue only the veteran notices, the judgment and the reason. The veteran's balloons use only their recorded words, checked word by word in code. | working |
 | 3 | **Three-pass review** | Looks at every drawn panel three times: the story, the people against their sheets, then hands, gaze, objects and stray writing. Only real problems mark a panel for redrawing. | working |
 
@@ -77,6 +77,8 @@ Requirements: Node.js 24 or later (developed on 26; TypeScript runs natively, no
 npm install
 node src/cli.ts all path/to/recording.m4a --ep my-episode --craft 寿司職人
 ```
+
+To interview a veteran live, run `node src/cli.ts interview --ep my-episode --craft 寿司職人` and open the address it prints, next to the video call. Press 録音を始める. The page records, the words appear as they are spoken, and the next question to ask appears at the top. Press 聞いた after asking it. Afterwards, the whole recording goes into the same pipeline: `node src/cli.ts all episodes/my-episode/live/recording.webm --ep my-episode`.
 
 If you will commit to this repository, turn on its pre-commit check once per clone: `git config core.hooksPath .githooks`. It stops a commit that stages working data, keys, home paths or private words.
 

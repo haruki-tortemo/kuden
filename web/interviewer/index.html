@@ -1,0 +1,48 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>聞き取り</title>
+<link rel="stylesheet" href="interviewer.css">
+</head>
+<body>
+<header class="bar">
+  <p class="bar-title"><span id="craft"></span>の判断　聞き取り</p>
+  <div class="bar-rec">
+    <span class="rec-dot" id="rec-dot" aria-hidden="true"></span>
+    <span class="rec-time" id="rec-time">0:00</span>
+    <button type="button" class="btn-line" id="rec-button">録音を始める</button>
+  </div>
+</header>
+
+<main class="page">
+  <section class="next" aria-live="polite">
+    <p class="label" id="next-label">次に聞くこと</p>
+    <h1 class="question" id="question">録音を始めると、最初に聞くことがここに出ます。</h1>
+    <p class="why" id="why"></p>
+    <div class="actions">
+      <button type="button" class="btn-fill" id="asked" disabled>聞いた</button>
+      <button type="button" class="btn-line accent" id="another" disabled>別の質問にする</button>
+    </div>
+    <p class="backup" id="backup"></p>
+    <p class="status" id="status"></p>
+  </section>
+
+  <ol class="steps" id="steps" aria-label="聞き取りの進み具合"></ol>
+
+  <section class="points" id="points" aria-label="判断の点"></section>
+
+  <section class="transcript">
+    <h2 class="label">書き起こし</h2>
+    <ol class="lines" id="lines"></ol>
+  </section>
+
+  <section class="memo" id="memo-wrap" hidden>
+    <h2 class="label">メモ</h2>
+    <ul class="memo-list" id="memo"></ul>
+  </section>
+</main>
+<script src="interviewer.js"></script>
+</body>
+</html>
