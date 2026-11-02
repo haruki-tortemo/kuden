@@ -43,6 +43,8 @@ Claude does not output images, so drawing goes to GPT-Image-2.5. Everything arou
 | Draw | GPT-Image-2.5 | sheets at max, panels at high | Claude does not output images. Claude writes every picture prompt; the image model draws. The sheets decide how every panel looks, so they get the top setting. |
 | Transcribe | whisper.cpp (local) | | The craftsman's voice does not leave the machine at this step. |
 
+We also measured whether translation and the critic could run on Claude Sonnet 5.5, on the same episode. Sonnet was twice as fast, but it put 7 of 19 English balloons over the length rule, garbled one Portuguese line and raised one false alarm as critic, so both steps stay on Opus 5.5 ([`docs/devlog.md`](docs/devlog.md) §4). The model for these two steps is a setting (`CLAUDE_MODEL_LIGHT`), so the comparison (`tools/compare-light-model.ts`) can be run again when models change.
+
 All Claude calls use adaptive thinking and server-side fallback, so a rare decline is retried on another model inside the same request.
 
 ## Built with Claude Code

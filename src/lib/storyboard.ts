@@ -1,4 +1,4 @@
-import { askStructured } from "./claude.ts";
+import { askStructured, LIGHT_MODEL } from "./claude.ts";
 import { z } from "zod";
 import { Storyboard, Translations, LANGS, type Transcript } from "./episode.ts";
 import { assertMasterWords, checkMasterWords } from "./words.ts";
@@ -55,6 +55,12 @@ const Critique = z.object({
   issues: z.array(z.object({ where: z.string(), line: z.string(), problem: z.string() })),
 });
 
+// A separate call that only points out writing problems; it never rewrites.
+export async function critique(board: Storyboard, model = LIGHT_MODEL): Promise<string[]> {
+  const { issues } = await askStructured({ schema: Critique, system: CRITIC_SYSTEM, user: JSON.stringify(board), effort: "medium", model });
+  return issues.map((i) => `${i.where}: "${i.line}" ${i.problem}`);
+}
+
 const PROOFREAD_SYSTEM = `You check a speech-to-text transcript of a Japanese craftsman talking about their work.
 Fix only words the recogniser misheard: homophones written with the wrong kanji, and craft terms turned into nonsense (for example 酢飯 heard as a meaningless phrase). Use the craft and the surrounding lines to decide.
 Do not fix grammar, dialect, fillers, word order or anything the speaker plausibly said. Do not shorten or add. When unsure, leave the line alone.
@@ -97,10 +103,7 @@ export async function makeStoryboard(t: Transcript, craft: string, log: (s: stri
       effort: "high",
     });
     const problems = [...checkMasterWords(board, t), ...checkRules(board)];
-    if (!problems.length) {
-      const { issues } = await askStructured({ schema: Critique, system: CRITIC_SYSTEM, user: JSON.stringify(board), effort: "medium" });
-      problems.push(...issues.map((i) => `${i.where}: "${i.line}" ${i.problem}`));
-    }
+    if (!problems.length) problems.push(...(await critique(board)));
     if (!problems.length) return board;
     log(`  storyboard try ${attempt}: ${problems.length} problem(s)\n    ${problems.join("\n    ")}`);
     feedback = problems.map((p) => `- ${p}`).join("\n");
@@ -120,7 +123,7 @@ Targets:
 For master_name, give the natural way to say this title of respect for a head craftsman in each language (en "Master", not a transliteration).
 Return every balloon, in order, with the same panel_id and index.`;
 
-export async function translate(board: Storyboard, kicker: string): Promise<Translations> {
+export async function translate(board: Storyboard, kicker: string, model = LIGHT_MODEL): Promise<Translations> {
   const lines = board.panels.flatMap((p) =>
     p.balloons.map((b, index) => ({ panel_id: p.id, index, speaker: b.speaker, text_ja: b.text_ja })),
   );
@@ -136,6 +139,7 @@ export async function translate(board: Storyboard, kicker: string): Promise<Tran
       `Balloons:\n${JSON.stringify(lines, null, 1)}`,
     ].join("\n"),
     effort: "medium",
+    model,
   });
   for (const line of lines) {
     const hit = result.balloons.find((b) => b.panel_id === line.panel_id && b.index === line.index);

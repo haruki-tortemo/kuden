@@ -62,3 +62,28 @@ So the craftsman's balloon in panel 2 says "the *eyes* go hard" instead of "the 
 Status: open. The before and after of this screen will be added here when it is built.
 
 Code so far: `src/lib/storyboard.ts` (`PROOFREAD_SYSTEM`, effort `high`), `src/lib/words.ts` (the word-by-word check).
+
+## 4. Could the lighter steps run on Sonnet 5.5? Measured: no, they stay on Opus 5.5
+
+**Question.** Translation and the storyboard critic look lighter than the storyboard itself, so a smaller, faster model might do. The rule we set before measuring: compare both models on the same episode, and keep Opus wherever Sonnet does worse.
+
+**How.** `tools/compare-light-model.ts` runs both models on episode 2 with the same inputs.
+
+- **Translation:** both models translated the same 19 balloons, plus the title and the lesson, into the four target languages. We counted what can be counted, then read every line side by side.
+- **Critic:** we planted four writing problems in a copy of the storyboard and gave each model two runs. A good critic flags all four and leaves the veteran's recorded lines alone. The four planted lines were:
+  - a riddle title (湯気の向こうに)
+  - a slogan for the lesson (素材の声に耳を傾ける)
+  - dramatic narration (運命を分ける一瞬)
+  - the apprentice summing up the answer
+
+| | Opus 5.5 | Sonnet 5.5 |
+|---|---|---|
+| Translation time | 51 s | 24 s |
+| English balloons over 8 words (the rule is 8) | 1 of 19 | 7 of 19 |
+| Read side by side | no errors found | a garbled Portuguese lesson ("encoste a palma na mão no arroz"). In easy Japanese it kept harder words (開店, しこみば) where Opus rewrote them (お店が開く前) |
+| Critic: planted problems caught | 4/4, 4/4 | 4/4, 4/4 |
+| Critic: false alarms | 0, 0 | 0, 1. It flagged the apprentice asking when to stop fanning as an added step, but the veteran did talk about fanning |
+
+**Decision.** Both steps stay on Opus 5.5. Sonnet was twice as fast, but it broke the length rule and made one translation error the reader would see. Its critic false alarm would send a correct storyboard back for another (Opus) try. The model for these steps stays switchable (`CLAUDE_MODEL_LIGHT`), so the comparison can be run again when models change.
+
+Raw results stay local (`episodes/<id>/compare/`); the script is in the repository.

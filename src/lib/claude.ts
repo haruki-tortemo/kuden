@@ -3,6 +3,9 @@ import { betaZodOutputFormat } from "@anthropic-ai/sdk/helpers/beta/zod";
 import type { z } from "zod";
 
 export const MODEL = process.env.CLAUDE_MODEL ?? "claude-opus-5-5";
+// For the lighter writing steps (translation, the storyboard critic). Which model goes here is decided
+// by comparing both on the same episode (docs/devlog.md).
+export const LIGHT_MODEL = process.env.CLAUDE_MODEL_LIGHT ?? MODEL;
 
 let client: Anthropic | undefined;
 function getClient(): Anthropic {
@@ -20,9 +23,10 @@ export async function askStructured<T extends z.ZodType>(opts: {
   user: Anthropic.Beta.BetaContentBlockParam[] | string;
   effort?: Effort;
   maxTokens?: number;
+  model?: string;
 }): Promise<z.infer<T>> {
   const response = await getClient().beta.messages.parse({
-    model: MODEL,
+    model: opts.model ?? MODEL,
     max_tokens: opts.maxTokens ?? 16000,
     betas: ["server-side-fallback-2026-07-01"],
     fallbacks: "default",
