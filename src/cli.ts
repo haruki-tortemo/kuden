@@ -14,7 +14,8 @@ const USAGE = `Usage:
   node src/cli.ts draw --ep <id> [--placeholder] [--only p3]  panels -> images (GPT-Image-2.5)
   node src/cli.ts review --ep <id>                    Claude checks every drawn panel in three passes
   node src/cli.ts voice --ep <id>                     cut the veteran's voice for each balloon
-  node src/cli.ts export --ep <id> [--out dir]        static page you can open or host
+  node src/cli.ts export --ep <id> [--out dir] [--voice-base url]   static page you can open or host
+                                                      (--voice-base: load voice clips from there instead of copying them)
   node src/cli.ts all <audio file> --ep <id> [--placeholder]`;
 
 const { values, positionals } = parseArgs({
@@ -26,6 +27,7 @@ const { values, positionals } = parseArgs({
     placeholder: { type: "boolean", default: false },
     only: { type: "string" },
     out: { type: "string" },
+    "voice-base": { type: "string" },
   },
 });
 
@@ -146,6 +148,7 @@ function exportPage(): void {
     translations: readJson(file("translations.json"), Translations),
     images: JSON.parse(fs.readFileSync(file("images.json"), "utf8")),
     voices: JSON.parse(fs.readFileSync(file("voices.json"), "utf8")) as VoiceClip[],
+    voiceBase: values["voice-base"],
   });
   console.log(`page: ${index}`);
 }

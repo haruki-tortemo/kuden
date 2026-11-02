@@ -20,6 +20,16 @@ recording ─▶ transcript ─▶ storyboard ─▶ panels ─▶ review ─▶
 5. **Cut the voice** for each of the veteran's balloons from the recording, using the word times.
 6. **Export** a static page that works offline, with no server and no keys.
 
+## The core: three jobs Claude does
+
+| | Job | What Claude does | Status |
+|---|---|---|---|
+| 1 | **Interviewer** | Asks the veteran about one judgment, without interrupting. It follows the timeline, finds the moment of decision and what they noticed, and asks what a newcomer would miss. | being built |
+| 2 | **Storyboard** | Turns the recording into one episode: the apprentice stuck, the cue only the veteran notices, the judgment and the reason. The veteran's balloons use only their recorded words, checked word by word in code. | working |
+| 3 | **Three-pass review** | Looks at every drawn panel three times: the story, the people against their sheets, then hands, gaze, objects and stray writing. Only real problems mark a panel for redrawing. | working |
+
+Everything else (transcription, drawing, cutting the voice, the page) supports these three.
+
 ## Claude decides and checks, the image model draws
 
 Claude does not output images, so drawing goes to GPT-Image-2.5. Everything around the drawing stays with Claude: what each panel must show, and whether the result really shows it.
@@ -71,6 +81,8 @@ node src/cli.ts all path/to/recording.m4a --ep my-episode --craft 寿司職人
 Keys for the API steps go in the environment (`ANTHROPIC_API_KEY`, `OPENAI_API_KEY`) or in `~/.secrets/anthropic.env` and `~/.secrets/openai.env`. To try the flow without image costs, add `--placeholder`: panels are drawn as labelled boxes.
 
 The finished page is in `out/<episode>/index.html` and opens in any browser.
+
+A person's voice is theirs. By default the voice clips are copied next to the page. With `export --voice-base <url>` they are not copied: the page loads them from storage the speaker agreed to, so the voice never has to be in this repository.
 
 ## Data brought in
 

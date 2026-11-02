@@ -15,8 +15,12 @@ export function exportEpisode(opts: {
   translations: Translations;
   images: PanelImages;
   voices: VoiceClip[];
+  // Where the page loads the voice clips from. Unset: the clips are copied next to the page.
+  // Set (a URL or a relative path): the clips are not copied, so a person's voice can live outside
+  // this folder and outside the repository, for example on storage the speaker agreed to.
+  voiceBase?: string;
 }): string {
-  const { epDir, outDir, board, translations, images, voices } = opts;
+  const { epDir, outDir, board, translations, images, voices, voiceBase } = opts;
   fs.rmSync(outDir, { recursive: true, force: true });
   fs.mkdirSync(outDir, { recursive: true });
 
@@ -51,7 +55,7 @@ export function exportEpisode(opts: {
             kind: b.kind,
             anchor: b.anchor,
             text: t?.text ?? { ja: b.text_ja },
-            voice: clip ? copy(clip.file) : null,
+            voice: clip ? (voiceBase ? `${voiceBase.replace(/\/+$/, "")}/${clip.file}` : copy(clip.file)) : null,
           };
         }),
       };
