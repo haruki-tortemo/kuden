@@ -1,8 +1,8 @@
 # claude-japan-2026 (working title)
 
-**A veteran talks about one judgment of their work, and it becomes a vertical manga textbook for young workers. Tap a panel and you hear the veteran say those words in their own voice; switch the balloons between Japanese, easy Japanese, English, Vietnamese and Portuguese.**
+**A form for handing a veteran's judgment on to the next person.** The veteran talks about one call they make at work that a newcomer would miss, and it becomes a vertical manga textbook for young workers, including those who came to Japan from abroad. Tap a panel and you hear the veteran say those words in their own voice; switch the balloons between Japanese, easy Japanese, English, Vietnamese and Portuguese.
 
-Built during Built with Claude: Japan 2026. A Japanese version of this README will follow.
+Built during Built with Claude: Japan 2026, theme ①: depth only you have. A Japanese version of this README will follow.
 
 > Status: work in progress. The recording → manga → page pipeline runs end to end on a sample recording. The interviewer AI and the confirmation screen are being built.
 
@@ -19,6 +19,17 @@ recording ─▶ transcript ─▶ storyboard ─▶ panels ─▶ review ─▶
 4. **Review** every drawn panel three times, one question each: story, people, details. Only problems that would mislead a reader mark a panel for redrawing.
 5. **Cut the voice** for each of the veteran's balloons from the recording, using the word times.
 6. **Export** a static page that works offline, with no server and no keys.
+
+## Claude decides and checks, the image model draws
+
+Claude does not output images, so drawing goes to GPT-Image-2.5. Everything around the drawing stays with Claude: what each panel must show, and whether the result really shows it.
+
+| | Claude (Opus 5.5) | GPT-Image-2.5 |
+|---|---|---|
+| **Decides** | The one judgment the episode teaches, the panels and the order they come in, who stands where, which hand does the work, and how the people and the key material look (written as reference descriptions) | |
+| **Hands over** | One picture prompt per panel and per reference sheet. Each prompt names the reference images to use and what not to copy from them, and forbids any text in the picture | Draws the reference sheets for the two people and the material once, then every panel from them |
+| **Checks** | Looks at every drawn panel three times (story, people, details), sorts problems into "redraw" and "note", and prints the command that redraws only the marked panels | Redraws only what Claude marked |
+| **Never** | Draws pixels | Writes words: every balloon is a separate layer, so the veteran's words and the five languages stay exact |
 
 ## How Claude is used, and why each model and setting
 
