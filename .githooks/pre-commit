@@ -1,0 +1,10 @@
+#!/bin/sh
+# Stop a commit that stages working data, keys, home paths or private words (see .claude/hooks/staged-check.mjs).
+# Turn it on once per clone:  git config core.hooksPath .githooks
+PATH="/opt/homebrew/bin:/usr/local/bin:$PATH"
+root="$(git rev-parse --show-toplevel)" || exit 1
+if ! command -v node >/dev/null 2>&1; then
+  echo "pre-commit: node not found, so the staged check could not run. Install Node.js, or skip once with git commit --no-verify." >&2
+  exit 1
+fi
+exec node "$root/.claude/hooks/staged-check.mjs" --pre-commit

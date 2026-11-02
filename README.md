@@ -78,6 +78,8 @@ npm install
 node src/cli.ts all path/to/recording.m4a --ep my-episode --craft 寿司職人
 ```
 
+If you will commit to this repository, turn on its pre-commit check once per clone: `git config core.hooksPath .githooks`. It stops a commit that stages working data, keys, home paths or private words.
+
 Keys for the API steps go in the environment (`ANTHROPIC_API_KEY`, `OPENAI_API_KEY`) or in `~/.secrets/anthropic.env` and `~/.secrets/openai.env`. To try the flow without image costs, add `--placeholder`: panels are drawn as labelled boxes.
 
 The finished page is in `out/<episode>/index.html` and opens in any browser.

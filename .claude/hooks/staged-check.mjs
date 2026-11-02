@@ -6,15 +6,21 @@
 //   - absolute paths into someone's home folder
 //   - private words listed one per line in .claude/blocked-words.local.txt (not committed)
 // Exit code 2 blocks the tool call and shows the reasons to Claude.
+//
+// The same check runs as a git pre-commit hook (.githooks/pre-commit calls it with --pre-commit),
+// so a commit made from anywhere, not only from Claude Code in this folder, goes through it.
 import { execFileSync } from "node:child_process";
 import fs from "node:fs";
 import path from "node:path";
 
-const input = JSON.parse(fs.readFileSync(0, "utf8") || "{}");
-const command = input.tool_input?.command ?? "";
-if (!/\bgit\b[^\n;&|]*\bcommit\b/.test(command)) process.exit(0);
-
-const dir = command.match(/\bgit\s+-C\s+("[^"]+"|'[^']+'|\S+)/)?.[1]?.replace(/^["']|["']$/g, "") ?? input.cwd ?? process.cwd();
+const preCommit = process.argv.includes("--pre-commit");
+let dir = process.cwd();
+if (!preCommit) {
+  const input = JSON.parse(fs.readFileSync(0, "utf8") || "{}");
+  const command = input.tool_input?.command ?? "";
+  if (!/\bgit\b[^\n;&|]*\bcommit\b/.test(command)) process.exit(0);
+  dir = command.match(/\bgit\s+-C\s+("[^"]+"|'[^']+'|\S+)/)?.[1]?.replace(/^["']|["']$/g, "") ?? input.cwd ?? dir;
+}
 const git = (...args) => execFileSync("git", ["-C", dir, ...args], { encoding: "utf8", maxBuffer: 64 * 1024 * 1024 });
 
 let root;
@@ -25,7 +31,7 @@ try {
 }
 // Only guard this project, not another repository the command happens to point at.
 const real = (p) => fs.realpathSync(path.resolve(p));
-if (real(root) !== real(process.env.CLAUDE_PROJECT_DIR ?? root)) process.exit(0);
+if (!preCommit && real(root) !== real(process.env.CLAUDE_PROJECT_DIR ?? root)) process.exit(0);
 
 const problems = [];
 const names = git("diff", "--cached", "--name-only").split("\n").filter(Boolean);
@@ -53,5 +59,7 @@ for (const line of added) {
 
 if (problems.length) {
   process.stderr.write(`Commit stopped by .claude/hooks/staged-check.mjs:\n- ${[...new Set(problems)].join("\n- ")}\nUnstage or fix these, then commit again.\n`);
-  process.exit(2);
+  process.exit(preCommit ? 1 : 2);
 }
+// One line on success, so a commit shows that the check really ran.
+if (preCommit) process.stderr.write(`staged-check: ok (${names.length} files)\n`);
