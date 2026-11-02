@@ -12,4 +12,6 @@ The reader was designed image-first: three layout hypotheses were drawn as image
 | Not copied | No layout, decoration or branding taken from any particular app; the drafts were drawn from written specs, not from screenshots of existing products |
 | Our own point | The voice row: the craftsman's own voice is a first-class control next to the title, and every balloon the craftsman speaks carries a ▶ that plays the seconds they said it |
 
+One planned difference from the original: balloons sit on the top or bottom edge of each frame instead of inside the picture. The generated panels do not reliably leave the planned corner empty, in the first build a balloon covered the apprentice's face, and translations run longer than the Japanese, so the picture is kept clear.
+
 Tokens used by `web/reader/reader.css`: paper `#f3efe6`, ink `#1d1b18`, accent (vermilion) `#c2412d`, soft ink `#6b655c`, rule `#d9d2c4`.

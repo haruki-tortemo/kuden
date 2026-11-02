@@ -2,7 +2,7 @@ node_modules/
 .env
 .env.*
 !.env.example
-.claude/settings.local.json
+.claude/*.local.*
 .DS_Store
 
 # Working data: interviews, drafts and generated images stay on this Mac.
