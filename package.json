@@ -1,0 +1,28 @@
+{
+  "name": "claude-japan-2026",
+  "private": true,
+  "type": "module",
+  "description": "A veteran craftsman talks; Claude turns the judgment in their eyes into a vertical-scroll manga textbook. Tap a panel to hear their real voice.",
+  "engines": {
+    "node": ">=24"
+  },
+  "scripts": {
+    "ingest": "node src/cli.ts ingest",
+    "storyboard": "node src/cli.ts storyboard",
+    "draw": "node src/cli.ts draw",
+    "voice": "node src/cli.ts voice",
+    "export": "node src/cli.ts export",
+    "all": "node src/cli.ts all",
+    "check": "tsc --noEmit",
+    "test": "node --test test/"
+  },
+  "dependencies": {
+    "@anthropic-ai/sdk": "^1.3.0",
+    "openai": "^7.45.1",
+    "zod": "^4.6.7"
+  },
+  "devDependencies": {
+    "@types/node": "^26.6.6",
+    "typescript": "^7.0.2"
+  }
+}

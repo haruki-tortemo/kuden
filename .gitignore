@@ -1,0 +1,11 @@
+node_modules/
+.env
+.env.*
+!.env.example
+.claude/settings.local.json
+.DS_Store
+
+# Working data: interviews, drafts and generated images stay on this Mac.
+# Only finished, consented episodes are copied into samples/.
+episodes/
+out/
