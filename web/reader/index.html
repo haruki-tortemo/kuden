@@ -1,0 +1,33 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>__TITLE__</title>
+<link rel="stylesheet" href="reader.css">
+</head>
+<body>
+<main class="page">
+  <header class="cover">
+    <p class="kicker" id="kicker"></p>
+    <h1 class="title" id="title"></h1>
+    <p class="lesson" id="lesson"></p>
+    <div class="voice-row">
+      <span class="voice-icon" aria-hidden="true">
+        <svg viewBox="0 0 24 24" width="20" height="20"><path d="M4 10v4M8 7v10M12 4v16M16 7v10M20 10v4" stroke="currentColor" stroke-width="2" stroke-linecap="round" fill="none"/></svg>
+      </span>
+      <span class="voice-name" id="voice-name"></span>
+      <label class="voice-switch">
+        <span id="voice-label"></span>
+        <input type="checkbox" role="switch" id="voice-toggle" checked>
+        <span class="track" aria-hidden="true"></span>
+      </label>
+    </div>
+  </header>
+  <nav class="langs" id="langs" aria-label="Language"></nav>
+  <section class="strip" id="strip"></section>
+</main>
+<script type="application/json" id="episode">__EPISODE__</script>
+<script src="reader.js"></script>
+</body>
+</html>

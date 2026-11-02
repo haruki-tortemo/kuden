@@ -116,7 +116,7 @@ const TRANSLATE_SYSTEM = `You translate the balloons of a manga textbook for you
 Targets:
 - ja: copy the Japanese exactly as given.
 - ja_easy: やさしい日本語 for people still learning Japanese. One thing per sentence, です/ます form, no double negatives, no passive voice, common words. Keep craft words such as シャリ or ネタ as they are and give the reading after hard kanji in parentheses, like 包丁(ほうちょう). Put a space between phrases (分かち書き). Keep the meaning and the veteran's warmth.
-- en, vi, pt: natural spoken language a young worker would use; keep the craftsman's tone (gruff, kind) and keep craft terms understandable. Keep each line about as short as the Japanese.
+- en, vi, pt: natural spoken language a young worker would use; keep the craftsman's tone (gruff, kind) and keep craft terms understandable. Keep each line about as short as the Japanese; in English, at most about 8 words per balloon, split into two short sentences if needed.
 For master_name, give the natural way to say this title of respect for a head craftsman in each language (en "Master", not a transliteration).
 Return every balloon, in order, with the same panel_id and index.`;
 

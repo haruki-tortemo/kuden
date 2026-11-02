@@ -12,3 +12,8 @@ out/
 
 # Design drafts (the chosen original is design/reader-original.png)
 design/mocks/
+
+# Local preview config and screenshots of the built page
+.claude/launch.json
+design/impl-*
+design/compare-*

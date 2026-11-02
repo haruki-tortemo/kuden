@@ -39,6 +39,7 @@ export function exportEpisode(opts: {
       if (!image) throw new Error(`No image for panel ${p.id}`);
       return {
         id: p.id,
+        beat: p.beat,
         image: copy(image),
         width,
         height,
