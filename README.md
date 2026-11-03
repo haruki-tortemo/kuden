@@ -1,6 +1,6 @@
 # claude-japan-2026 (working title)
 
-**Turns a veteran's spoken judgment into a manga textbook the next person can learn from.** The veteran talks about one call they make at work that a newcomer would miss, and it becomes a vertical manga episode for young workers, including those who came to Japan from abroad. Tap a panel and you hear the veteran say those words in their own voice; switch the balloons between Japanese, easy Japanese, English, Vietnamese and Portuguese.
+**Turns a veteran's spoken judgment into a manga textbook the next person can learn from.** A veteran knows when the rice is ready, but has rarely put the reason into words: it is tacit knowledge. Asking them to explain it rarely brings it out, so Claude draws it out instead, asking about one real moment, one question at a time, each one rebuilt from the answer before it. The veteran talks about one call they make at work that a newcomer would miss, and it becomes a vertical manga episode for young workers, including those who came to Japan from abroad. Tap a panel and you hear the veteran say those words in their own voice; switch the balloons between Japanese, easy Japanese, English, Vietnamese and Portuguese.
 
 Built during Built with Claude: Japan 2026, theme ①: depth only you have. A Japanese version of this README will follow.
 
@@ -25,7 +25,7 @@ recording ─▶ transcript ─▶ storyboard ─▶ panels ─▶ review ─▶
 
 | | Job | What Claude does | Status |
 |---|---|---|---|
-| 1 | **Interviewer** | Sits beside the person interviewing the veteran and suggests the one next question from what has been said so far. It follows the Critical Decision Method (Klein, Calderwood & MacGregor, 1989): one hard incident told without interruption, then the decision points and what the veteran noticed, weighed and chose, then what a newcomer would miss. The veteran never talks to the tool. | working, tried with a real microphone |
+| 1 | **Interviewer** | The veteran knows the judgment but has not put it into words, so it has to be drawn out, not just recorded. Claude sits beside the person interviewing the veteran and suggests only the one next question, made again from what has just been said. A full list of questions given at once tires the speaker, and goes stale as soon as the answers change what is worth asking. It follows the Critical Decision Method (Klein, Calderwood & MacGregor, 1989): one hard incident told without interruption, then the decision points and what the veteran noticed, weighed and chose, then what a newcomer would miss. The veteran never talks to the tool. | working, tried with a real microphone |
 | 2 | **Storyboard** | Turns the recording into one episode: the apprentice stuck, the cue only the veteran notices, the judgment and the reason. The veteran's balloons use only their recorded words, checked word by word in code. | working |
 | 3 | **Three-pass review** | Looks at every drawn panel three times: the story, the people against their sheets, then hands, gaze, objects and stray writing. Only real problems mark a panel for redrawing. | working |
 

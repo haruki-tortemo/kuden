@@ -106,6 +106,8 @@ Raw results stay local (`episodes/<id>/compare/`); the script is in the reposito
 
 ## 5. The interviewer read the question out loud → the AI asked it again
 
+**Why the interviewer gives one question at a time.** What a veteran knows best is often what they have never said: they see the rice is ready, but the reason has never had to be put into words. A list of ten questions handed over at the start does not reach it. The veteran tires of answering, and after the first few answers half the list no longer fits, because the answers have shown where the real judgment is. So the interviewer AI reads the transcript again whenever new words have come in (at most every 15 seconds) and suggests only the one next question. The order of the stages comes from the Critical Decision Method (Klein, Calderwood & MacGregor, 1989); the question itself is made fresh from the last answer. That is also why this bug mattered: a tool that rebuilds the question from what was said has to know what was already said.
+
 **What broke.** In the first test with a real microphone, the person interviewing read the suggested opening out loud but did not press 聞いた. The next suggestion was the same opening again. It even started with "はい、よく聞こえています", an answer to the interviewer's own mic check.
 
 **Why.** One microphone hears both people, and the transcript does not say who is speaking. The prompt only counted the questions the interviewer had marked as asked.
