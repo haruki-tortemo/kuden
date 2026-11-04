@@ -5,6 +5,7 @@ import path from "node:path";
 import { ROOT, type Segment, writeJson } from "./episode.ts";
 import { transcribe } from "./transcribe.ts";
 import { nextMove, type Move } from "./interviewer.ts";
+import type { MakeJob } from "./demo.ts";
 
 // A small server on this Mac for a live interview. The page records the room (or the call) and sends
 // the audio every few seconds; the server appends it to one recording, transcribes the new part locally,
@@ -23,7 +24,7 @@ interface State {
 
 const TYPES: Record<string, string> = { ".html": "text/html; charset=utf-8", ".css": "text/css", ".js": "text/javascript" };
 
-export function startLiveServer(opts: { epDir: string; craft: string; minutes: number; port: number }): http.Server {
+export function startLiveServer(opts: { epDir: string; craft: string; minutes: number; port: number; job?: MakeJob }): http.Server {
   const live = path.join(opts.epDir, "live");
   fs.mkdirSync(live, { recursive: true });
   const recording = path.join(live, "recording.webm");
@@ -95,7 +96,13 @@ export function startLiveServer(opts: { epDir: string; craft: string; minutes: n
           return json(200, move);
         }
         if (req.method === "GET" && url.pathname === "/api/state") {
-          return json(200, { craft: opts.craft, minutes: opts.minutes, lines: allLines(), asked: state.asked, move: state.moves.at(-1) ?? null });
+          const make = opts.job?.view() ?? null;
+          return json(200, { craft: opts.craft, minutes: opts.minutes, lines: allLines(), asked: state.asked, move: state.moves.at(-1) ?? null, make });
+        }
+        // Only in the demo: make the episode from this recording, and report how far it has got.
+        if (opts.job && url.pathname === "/api/make") {
+          if (req.method === "POST") await queue(() => opts.job!.start());
+          return json(200, opts.job.view());
         }
         // The page itself.
         const rel = url.pathname === "/" ? "index.html" : url.pathname.slice(1);

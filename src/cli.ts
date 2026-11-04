@@ -22,7 +22,11 @@ const USAGE = `Usage:
                                                       (afterwards: ingest episodes/<id>/live/recording.webm --ep <id>)
   node src/cli.ts confirm --ep <id> [--number 1] [--port 4190]
                                                       the veteran checks every panel before publishing: listen,
-                                                      fix a word, record a line again, take a voice out, then publish`;
+                                                      fix a word, record a line again, take a voice out, then publish
+  node src/cli.ts demo --ep <id> [--craft 寿司職人] [--port 4200] [--placeholder]
+                                                      the whole flow in one browser tab, for filming: the interview,
+                                                      then 漫画にする makes the episode, then the confirmation screen
+                                                      (on --port + 1)`;
 
 const { values, positionals } = parseArgs({
   allowPositionals: true,
@@ -192,6 +196,40 @@ try {
         process.exit(1);
       });
       server.on("listening", () => console.log(`confirm: http://127.0.0.1:${port}/  (Ctrl+C to stop; choices are kept in ${path.join(dir, "confirm.json")})`));
+      break;
+    }
+    case "demo": {
+      requireKey("ANTHROPIC_API_KEY");
+      const { startLiveServer } = await import("./lib/live.ts");
+      const { startConfirmServer } = await import("./lib/confirm.ts");
+      const { MakeJob } = await import("./lib/demo.ts");
+      const port = Number(values.port ?? 4200);
+      const confirmPort = port + 1;
+      // The confirmation screen reads the finished episode when it starts, so it starts once the episode is made.
+      const job = new MakeJob({
+        epDir: dir,
+        ep,
+        craft: values.craft!,
+        placeholder: values.placeholder!,
+        onDone: () =>
+          new Promise((resolve, reject) => {
+            const server = startConfirmServer({ epDir: dir, ep, number: values.number!, port: confirmPort });
+            server.on("error", (err: NodeJS.ErrnoException) =>
+              reject(new Error(err.code === "EADDRINUSE" ? `確かめる画面のポート ${confirmPort} が使われています` : err.message)),
+            );
+            server.on("listening", () => {
+              console.log(`confirm: http://127.0.0.1:${confirmPort}/`);
+              resolve(`http://127.0.0.1:${confirmPort}/`);
+            });
+          }),
+      });
+      await job.resume();
+      const server = startLiveServer({ epDir: dir, craft: values.craft!, minutes: Number(values.minutes), port, job });
+      server.on("error", (err: NodeJS.ErrnoException) => {
+        console.error(err.code === "EADDRINUSE" ? `Port ${port} is already in use. Try another one: --port ${port + 2}` : err.message);
+        process.exit(1);
+      });
+      server.on("listening", () => console.log(`demo: http://127.0.0.1:${port}/  (Ctrl+C to stop; progress is logged in ${path.join(dir, "make.log")})`));
       break;
     }
     case "all":

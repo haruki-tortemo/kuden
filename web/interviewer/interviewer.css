@@ -87,6 +87,9 @@ button:disabled { cursor: default; opacity: 0.45; }
   font-weight: 700;
 }
 
+a.btn-fill { display: inline-flex; align-items: center; justify-content: center; text-decoration: none; }
+[hidden] { display: none !important; }
+
 .btn-line {
   border: 1.5px solid var(--ink);
   background: transparent;

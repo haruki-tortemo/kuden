@@ -87,6 +87,8 @@ Keys for the API steps go in the environment (`ANTHROPIC_API_KEY`, `OPENAI_API_K
 
 Before publishing, go through the episode with the craftsman: `node src/cli.ts confirm --ep my-episode`, open the address it prints, and press 公開する when every panel is passed. The finished page is in `out/<episode>/index.html` and opens in any browser.
 
+To go through the whole flow in one browser tab, as in the demo video, run `node src/cli.ts demo --ep my-episode --craft 寿司職人` and open the address it prints. After the interview, press 漫画にする: the page shows each step (transcribe, storyboard, draw, review, redraw, voice) and then links to the confirmation screen. Every step is the same command as above, so an interrupted run picks up where it stopped. Add `--placeholder` to rehearse without image costs.
+
 A person's voice is theirs. By default the voice clips are copied next to the page. With `export --voice-base <url>` they are not copied: the page loads them from storage the speaker agreed to, so the voice never has to be in this repository.
 
 ## Data brought in
