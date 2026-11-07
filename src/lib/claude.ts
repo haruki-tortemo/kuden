@@ -13,6 +13,20 @@ function getClient(): Anthropic {
   return client;
 }
 
+// Once in a while the answer does not fit the schema (the storyboard came back with a third character).
+// Asking again costs one call; failing here would stop the whole episode.
+export async function retryOnSchemaMiss<R>(call: () => Promise<R>, tries = 3): Promise<R> {
+  for (let attempt = 1; ; attempt++) {
+    try {
+      return await call();
+    } catch (err) {
+      const miss = err instanceof Error && /parse structured output/.test(err.message);
+      if (!miss || attempt >= tries) throw err;
+      console.error(`The answer did not fit the schema, asking again (${attempt}/${tries - 1}).`);
+    }
+  }
+}
+
 type Effort = "low" | "medium" | "high" | "xhigh" | "max";
 
 // One structured call. Server-side fallback is on so a rare safety decline is retried on another model
@@ -25,16 +39,18 @@ export async function askStructured<T extends z.ZodType>(opts: {
   maxTokens?: number;
   model?: string;
 }): Promise<z.infer<T>> {
-  const response = await getClient().beta.messages.parse({
-    model: opts.model ?? MODEL,
-    max_tokens: opts.maxTokens ?? 16000,
-    betas: ["server-side-fallback-2026-07-01"],
-    fallbacks: "default",
-    thinking: { type: "adaptive" },
-    output_config: { effort: opts.effort ?? "high", format: betaZodOutputFormat(opts.schema) },
-    system: opts.system,
-    messages: [{ role: "user", content: opts.user }],
-  });
+  const response = await retryOnSchemaMiss(() =>
+    getClient().beta.messages.parse({
+      model: opts.model ?? MODEL,
+      max_tokens: opts.maxTokens ?? 16000,
+      betas: ["server-side-fallback-2026-07-01"],
+      fallbacks: "default",
+      thinking: { type: "adaptive" },
+      output_config: { effort: opts.effort ?? "high", format: betaZodOutputFormat(opts.schema) },
+      system: opts.system,
+      messages: [{ role: "user", content: opts.user }],
+    }),
+  );
   if (response.stop_reason === "refusal") {
     throw new Error(`Claude declined: ${response.stop_details?.category ?? "unknown"} ${response.stop_details?.explanation ?? ""}`);
   }
