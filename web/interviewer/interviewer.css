@@ -182,7 +182,7 @@ button:focus-visible { outline: 2px solid var(--ink); outline-offset: 2px; }
 .lines li { display: grid; grid-template-columns: 5em 1fr; gap: 16px; font-size: 18px; line-height: 2; }
 .lines time { color: var(--ink-faint); font-variant-numeric: tabular-nums; }
 .lines li.pending span { color: var(--ink-soft); }
-.lines .empty { color: var(--ink-soft); font-size: 16px; }
+.lines .empty { display: block; color: var(--ink-soft); font-size: 16px; }
 
 .memo { margin-top: 24px; padding-top: 16px; border-top: 1.5px solid var(--rule); }
 .memo-list { margin: 0; padding: 0; list-style: none; font-size: 16px; color: var(--ink-soft); }
