@@ -1,7 +1,7 @@
 // Feed a recorded transcript to the interviewer a little at a time, as if the interview were happening,
 // and print what it would suggest at each point and how long the suggestion took.
 //
-//   node tools/simulate-interview.ts --ep dev-shari-run2 [--model claude-opus-5-5]
+//   node tools/simulate-interview.ts --ep my-episode [--model claude-opus-5-5]
 import path from "node:path";
 import { parseArgs } from "node:util";
 import { Transcript, episodeDir, readJson } from "../src/lib/episode.ts";

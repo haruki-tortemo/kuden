@@ -2,7 +2,7 @@
 // critic. Both models get the same inputs. Results go to episodes/<id>/compare/ for a person to read side
 // by side; this script prints only what can be counted.
 //
-//   node tools/compare-light-model.ts --ep dev-shari-run2 [--a claude-opus-5-5] [--b claude-sonnet-5-5]
+//   node tools/compare-light-model.ts --ep my-episode [--a claude-opus-5-5] [--b claude-sonnet-5-5]
 import fs from "node:fs";
 import path from "node:path";
 import { parseArgs } from "node:util";
