@@ -70,6 +70,10 @@ Claude Code was the main developer of this repository. What it used is in `.clau
 
 What broke along the way and how it was fixed, with before and after pictures: [`docs/devlog.md`](docs/devlog.md).
 
+## See it without keys
+
+Clone the repository and open `samples/index.html` in any browser. The page runs with no server and no keys: tap a panel to hear the speaker, and switch the balloons between the five languages. The hosted copy is in preparation. The first finished sample is added once the demo episode has been recorded and confirmed. How a sample gets in, and what is refused: [`samples/README.md`](samples/README.md).
+
 ## Run it
 
 Requirements: Node.js 24 or later (developed on 26; TypeScript runs natively, no build step), ffmpeg, whisper.cpp (`whisper-cli`) with a Japanese-capable model.

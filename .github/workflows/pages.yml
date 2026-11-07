@@ -1,0 +1,25 @@
+# Publishes samples/ to GitHub Pages. Runs only when started by hand from the Actions tab,
+# after Pages is set to "GitHub Actions" in the repository settings.
+name: Publish samples
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - uses: actions/checkout@v7.0.1
+      - uses: actions/configure-pages@v6.0.0
+      - uses: actions/upload-pages-artifact@v5.0.0
+        with:
+          path: samples
+      - id: deployment
+        uses: actions/deploy-pages@v5.0.1

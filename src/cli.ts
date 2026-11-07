@@ -26,7 +26,8 @@ const USAGE = `Usage:
   node src/cli.ts demo --ep <id> [--craft 寿司職人] [--port 4200] [--placeholder]
                                                       the whole flow in one browser tab, for filming: the interview,
                                                       then 漫画にする makes the episode, then the confirmation screen
-                                                      (on --port + 1)`;
+                                                      (on --port + 1)
+  node src/cli.ts sample --ep <id> [--name folder]    copy a published, confirmed episode into samples/`;
 
 const { values, positionals } = parseArgs({
   allowPositionals: true,
@@ -38,6 +39,7 @@ const { values, positionals } = parseArgs({
     only: { type: "string" },
     out: { type: "string" },
     "voice-base": { type: "string" },
+    name: { type: "string" },
     minutes: { type: "string", default: "30" },
     port: { type: "string" },
   },
@@ -173,6 +175,12 @@ try {
     case "review": await review(); break;
     case "voice": voice(); break;
     case "export": exportPage(); break;
+    case "sample": {
+      const { addSample } = await import("./lib/sample.ts");
+      const page = addSample({ epDir: dir, publishedDir: path.join(ROOT, "out", ep), samplesDir: path.join(ROOT, "samples"), name: values.name ?? ep });
+      console.log(`sample: ${page}`);
+      break;
+    }
     case "interview": {
       requireKey("ANTHROPIC_API_KEY");
       const { startLiveServer } = await import("./lib/live.ts");
