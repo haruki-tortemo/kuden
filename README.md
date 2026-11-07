@@ -2,9 +2,11 @@
 
 **Turns a veteran's spoken judgment into a manga textbook the next person can learn from.** A veteran knows when the rice is ready, but has rarely put the reason into words: it is tacit knowledge. Asking them to explain it rarely brings it out, so Claude draws it out instead, asking about one real moment, one question at a time, each one rebuilt from the answer before it. The veteran talks about one call they make at work that a newcomer would miss, and it becomes a vertical manga episode for young workers, including those who came to Japan from abroad. Tap a panel and you hear the veteran say those words in their own voice; switch the balloons between Japanese, easy Japanese, English, Vietnamese and Portuguese.
 
-Built during Built with Claude: Japan 2026, theme ①: depth only you have. A Japanese version of this README will follow.
+Built during Built with Claude: Japan 2026, theme ①: depth only you have. [日本語の README](README-ja.md)
 
-> Status: work in progress. The recording → manga → page pipeline runs end to end on a sample recording, with the interviewer AI before it and the craftsman's confirmation screen before publishing.
+**Demo video:** in preparation.
+
+> Status: the whole flow runs end to end in one browser tab: the interview with the interviewer AI, the manga, the craftsman's confirmation screen, then a static page. The finished sample episode is being recorded.
 
 ## How it works
 
@@ -87,7 +89,7 @@ To interview a veteran live, run `node src/cli.ts interview --ep my-episode --cr
 
 If you will commit to this repository, turn on its pre-commit check once per clone: `git config core.hooksPath .githooks`. It stops a commit that stages working data, keys, home paths or private words.
 
-Keys for the API steps go in the environment (`ANTHROPIC_API_KEY`, `OPENAI_API_KEY`) or in `~/.secrets/anthropic.env` and `~/.secrets/openai.env`. To try the flow without image costs, add `--placeholder`: panels are drawn as labelled boxes.
+Keys for the API steps go in the environment (`ANTHROPIC_API_KEY`, `OPENAI_API_KEY`), in `~/.secrets/anthropic.env` and `~/.secrets/openai.env`, or in a `.env` copied from [`docs/env.example`](docs/env.example) and read with `node --env-file=.env src/cli.ts ...`. To try the flow without image costs, add `--placeholder`: panels are drawn as labelled boxes.
 
 Before publishing, go through the episode with the craftsman: `node src/cli.ts confirm --ep my-episode`, open the address it prints, and press 公開する when every panel is passed. The finished page is in `out/<episode>/index.html` and opens in any browser.
 
@@ -97,4 +99,4 @@ A person's voice is theirs. By default the voice clips are copied next to the pa
 
 ## Data brought in
 
-None yet. The sample craftsman is fictional; his talk was recorded during the hackathon.
+None. The sample craftsman is fictional. During development their talk was written for testing and read by a speech synthesiser. The sample in `samples/` is recorded during the hackathon, with a person playing the role.

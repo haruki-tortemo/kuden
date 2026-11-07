@@ -1,6 +1,6 @@
 # Development log
 
-What broke while building this, what we tried, and what finally worked. Every image here comes from the sample episode recorded during the hackathon: a fictional sushi chef, played by a team member. It is not real testimony.
+What broke while building this, what we tried, and what finally worked. Every image here comes from the sample episode recorded during the hackathon: a fictional sushi chef, whose talk was written for testing and read by a speech synthesiser. It is not real testimony.
 
 ## 1. Rice drawn as beads and stars → a material reference sheet
 
