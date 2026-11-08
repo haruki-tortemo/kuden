@@ -6,7 +6,7 @@ Built during Built with Claude: Japan 2026, theme ①: depth only you have. [日
 
 **Demo video:** in preparation.
 
-> Status: the whole flow runs end to end in one browser tab: the interview with the interviewer AI, the manga, the craftsman's confirmation screen, then a static page. The finished sample episode is being recorded.
+> Status: the whole flow runs end to end in one browser tab: the interview with the interviewer AI, the manga, the craftsman's confirmation screen, then a static page. A finished sample episode is in `samples/`, and you can [read it online](https://haruki-tortemo.github.io/kuden/).
 
 ## How it works
 
@@ -74,7 +74,7 @@ What broke along the way and how it was fixed, with before and after pictures: [
 
 ## See it without keys
 
-Clone the repository and open `samples/index.html` in any browser. The page runs with no server and no keys: tap a panel to hear the speaker, and switch the balloons between the five languages. The hosted copy is in preparation. The first finished sample is added once the demo episode has been recorded and confirmed. How a sample gets in, and what is refused: [`samples/README.md`](samples/README.md).
+Read the sample online at https://haruki-tortemo.github.io/kuden/, or clone the repository and open `samples/index.html` in any browser. The page runs with no server and no keys: tap a panel to hear the speaker, and switch the balloons between the five languages. The sample is one episode, 7 panels and 9 voice clips, about when to stop fanning vinegared rice. How a sample gets in, and what is refused: [`samples/README.md`](samples/README.md).
 
 ## Run it
 
@@ -99,4 +99,4 @@ A person's voice is theirs. By default the voice clips are copied next to the pa
 
 ## Data brought in
 
-None. The sample craftsman is fictional. During development their talk was written for testing and read by a speech synthesiser. The sample in `samples/` is recorded during the hackathon, with a person playing the role.
+None. The sample craftsman is fictional. During development, talks written for testing were read by a speech synthesiser; none of them are in the repository. The voice in `samples/` was recorded during the hackathon by a person playing the fictional sushi chef. It is not real testimony.
