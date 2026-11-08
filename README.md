@@ -4,7 +4,7 @@
 
 Built during Built with Claude: Japan 2026, theme ①: depth only you have. [日本語の README](README-ja.md)
 
-**Demo video:** in preparation.
+**Demo video (2:58, in Japanese):** https://youtu.be/XJsY3M_mPTU
 
 > Status: the whole flow runs end to end in one browser tab: the interview with the interviewer AI, the manga, the craftsman's confirmation screen, then a static page. A finished sample episode is in `samples/`, and you can [read it online](https://haruki-tortemo.github.io/kuden/).
 

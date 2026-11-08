@@ -4,7 +4,7 @@
 
 Built with Claude: Japan 2026で制作しました。テーマは①「あなたにしかない深さを。」です。[English README](README.md)
 
-**デモ動画:** 準備中
+**デモ動画（2分58秒）:** https://youtu.be/XJsY3M_mPTU
 
 > 現在の状態: 聞き手AIとの聞き取り、漫画づくり、職人の確認画面、静的ページの書き出しまで、ブラウザの1つのタブで最後まで動きます。完成した見本の回は`samples/`にあり、[公開先のページ](https://haruki-tortemo.github.io/kuden/)でも読めます。
 
