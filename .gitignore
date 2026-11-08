@@ -17,3 +17,6 @@ design/mocks/
 .claude/launch.json
 design/impl-*
 design/compare-*
+
+# Local design tool state
+.impeccable/

@@ -1,4 +1,4 @@
-# claude-japan-2026 (working title)
+# 口伝 (Kuden)
 
 **Turns a veteran's spoken judgment into a manga textbook the next person can learn from.** A veteran knows when the rice is ready, but has rarely put the reason into words: it is tacit knowledge. Asking them to explain it rarely brings it out, so Claude draws it out instead, asking about one real moment, one question at a time, each one rebuilt from the answer before it. The veteran talks about one call they make at work that a newcomer would miss, and it becomes a vertical manga episode for young workers, including those who came to Japan from abroad. Tap a panel and you hear the veteran say those words in their own voice; switch the balloons between Japanese, easy Japanese, English, Vietnamese and Portuguese.
 
